@@ -41,8 +41,8 @@ class myHandler
     }
 }
 
-$p = &new XML_Parser();
-$h = &new myHandler();
+$p = new XML_Parser();
+$h = new myHandler();
 
 $result = $p->setInputFile('xml_parser_file.xml');
 $result = $p->setHandlerObj($h);

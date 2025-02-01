@@ -47,7 +47,7 @@ class myParser extends XML_Parser
     }
 }
 
-$p = &new myParser();
+$p = new myParser();
 
 $result = $p->setInputFile('xml_parser_file.xml');
 $result = $p->parse();

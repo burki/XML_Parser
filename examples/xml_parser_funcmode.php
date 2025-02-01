@@ -10,7 +10,7 @@
 /**
  * require the parser
  */
-require_once '../Parser.php';
+require_once 'XML/Parser.php';
 
 class myParser extends XML_Parser
 {
@@ -35,7 +35,7 @@ class myParser extends XML_Parser
     }
 }
 
-$p = &new myParser(null, 'func');
+$p = new myParser(null, 'func');
 
 $result = $p->setInputString('<foo><foo-bar/></foo>');
 if (PEAR::isError($result)) {

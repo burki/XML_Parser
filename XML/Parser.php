@@ -280,22 +280,26 @@ class XML_Parser extends PEAR
         if (!is_object($this->_handlerObj)) {
             $this->_handlerObj = $this;
         }
+
         switch ($this->mode) {
+            case 'func':
+                // xml_set_object($this->parser, $this->_handlerObj);
+                xml_set_element_handler($this->parser,
+                    array($this->_handlerObj, 'funcStartHandler'),
+                    array($this->_handlerObj, 'funcEndHandler'));
+                break;
 
-        case 'func':
-            xml_set_object($this->parser, $this->_handlerObj);
-            xml_set_element_handler($this->parser,
-                array($this, 'funcStartHandler'), array($this, 'funcEndHandler'));
-            break;
+            case 'event':
+                // xml_set_object($this->parser, $this->_handlerObj);
+                xml_set_element_handler($this->parser,
+                    array($this->_handlerObj, 'startHandler'),
+                    array($this->_handlerObj, 'endHandler'));
+                break;
 
-        case 'event':
-            xml_set_object($this->parser, $this->_handlerObj);
-            xml_set_element_handler($this->parser, 'startHandler', 'endHandler');
-            break;
-        default:
-            return $this->raiseError('Unsupported mode given',
-                XML_PARSER_ERROR_UNSUPPORTED_MODE);
-            break;
+            default:
+                return $this->raiseError('Unsupported mode given',
+                    XML_PARSER_ERROR_UNSUPPORTED_MODE);
+                break;
         }
 
         /**
@@ -304,7 +308,7 @@ class XML_Parser extends PEAR
         foreach ($this->handler as $xml_func => $method) {
             if (method_exists($this->_handlerObj, $method)) {
                 $xml_func = 'xml_set_' . $xml_func;
-                $xml_func($this->parser, $method);
+                $xml_func($this->parser, array($this->_handlerObj, $method));
             }
         }
     }
@@ -651,12 +655,12 @@ class XML_Parser extends PEAR
      *
      * @param mixed $xp       ??
      * @param mixed $elem     ??
-     * @param mixed &$attribs ??
+     * @param mixed $attribs ??
      *
      * @return null
      * @abstract
      */
-    function startHandler($xp, $elem, &$attribs)
+    function startHandler($xp, $elem, $attribs)
     {
         return null;
     }
